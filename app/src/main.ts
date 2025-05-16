@@ -2,6 +2,14 @@ import WordCloud from "wordcloud";
 import type { Book } from './books';
 import { books } from './books';
 
+// Type definitions for DOM elements
+const canvas = document.getElementById('my_canvas') as HTMLCanvasElement;
+const form = document.getElementById('read_books_form') as HTMLFormElement;
+const shareUrl = document.getElementById('share_url') as HTMLAnchorElement;
+const downloadButton = document.getElementById('download_button') as HTMLButtonElement;
+const readCount = document.getElementById('read_count') as HTMLElement;
+const totalCount = document.getElementById('total_count') as HTMLElement;
+
 // Convert books array to WordCloud.ListEntry format
 const list: WordCloud.ListEntry[] = books.map((book: Book) => [book.name, book.weight]);
 
@@ -10,6 +18,7 @@ const bookToId: { [key: string]: string } = {};
 const idToBook: { [key: string]: string } = {};
 const bookToIsbn: { [key: string]: string } = {};
 const bookToAuthor: { [key: string]: string } = {};
+
 // Generate mappings from the books array
 books.forEach(book => {
   bookToId[book.name] = book.id;
@@ -18,7 +27,7 @@ books.forEach(book => {
   bookToAuthor[book.name] = book.author;
 });
 
-// Add this at the top level to track selected books
+// Track selected books
 let selectedBookIds: string[] = [];
 
 // Create a tooltip element
@@ -33,25 +42,21 @@ tooltip.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
 tooltip.style.zIndex = '1000';
 document.body.appendChild(tooltip);
 
-// Update the WordCloud initialization with hover functionality
-const canvas = document.getElementById('my_canvas');
-if (canvas) {
-  // Get initial selected books from URL
-  const urlParams = new URLSearchParams(window.location.search);
-  selectedBookIds = urlParams.get('books')?.split(',') || [];
+// Function to initialize WordCloud
+function initializeWordCloud() {
+  if (!canvas) return;
 
-  WordCloud(canvas, { 
-    list: list, 
-    minRotation: 0, 
-    maxRotation: 0, 
+  WordCloud(canvas, {
+    list: list,
+    minRotation: 0,
+    maxRotation: 0,
     weightFactor: 3,
     fontFamily: 'Average, Times, serif',
-    color: function(word: string) {
-      // Convert the word back to its ID to check if it's selected
+    color: (word: string) => {
       const wordId = bookToId[word];
       return selectedBookIds.includes(wordId) ? '#00FF00' : '#000000';
     },
-    hover: function(item: WordCloud.ListEntry, dimension: WordCloud.Dimension, event: MouseEvent) {
+    hover: (item: WordCloud.ListEntry, dimension: WordCloud.Dimension, event: MouseEvent) => {
       const bookTitle = item[0] as string;
       const isbn = bookToIsbn[bookTitle];
       const author = bookToAuthor[bookTitle];
@@ -69,6 +74,15 @@ if (canvas) {
       }
     }
   });
+}
+
+// Initialize WordCloud if canvas exists
+if (canvas) {
+  // Get initial selected books from URL
+  const urlParams = new URLSearchParams(window.location.search);
+  selectedBookIds = urlParams.get('books')?.split(',') || [];
+  
+  initializeWordCloud();
 
   // Add mouseout event to hide tooltip
   canvas.addEventListener('mouseout', () => {
@@ -76,7 +90,7 @@ if (canvas) {
   });
 }
 
-const form = document.getElementById('read_books_form');
+// Initialize form if it exists
 if (form) {
   // Create checkboxes for each book
   books.forEach(book => {
@@ -87,9 +101,7 @@ if (form) {
     checkbox.name = 'book';
     
     // Check if this book is in the URL parameters
-    const urlParams = new URLSearchParams(window.location.search);
-    const selectedIds = urlParams.get('books')?.split(',') || [];
-    if (selectedIds.includes(book.id)) {
+    if (selectedBookIds.includes(book.id)) {
       checkbox.checked = true;
     }
     
@@ -103,10 +115,10 @@ if (form) {
   form.addEventListener('change', (event) => {
     const target = event.target as HTMLInputElement;
     if (target.type === 'checkbox') {
-      const checkboxes = form.querySelectorAll('input[type="checkbox"]');
-      selectedBookIds = Array.from(checkboxes)
-        .filter((cb: HTMLInputElement) => cb.checked)
-        .map((cb: HTMLInputElement) => bookToId[cb.value]);
+      const checkboxes = Array.from(form.querySelectorAll('input[type="checkbox"]')) as HTMLInputElement[];
+      selectedBookIds = checkboxes
+        .filter(cb => cb.checked)
+        .map(cb => bookToId[cb.value]);
       
       // Update URL with selected books
       const url = new URL(window.location.href);
@@ -117,54 +129,38 @@ if (form) {
       }
       window.history.pushState({}, '', url.toString());
 
-      const shareUrl = document.getElementById('share_url');
       if (shareUrl) {
         shareUrl.textContent = url.toString();
         shareUrl.href = url.toString();
       }
 
-      // Redraw the word cloud with updated colors
-      if (canvas) {
-        WordCloud(canvas, { 
-          list: list, 
-          minRotation: 0, 
-          maxRotation: 0, 
-          weightFactor: 3,
-          fontFamily: 'Average, Times, serif',
-          color: function(word: string) {
-            const wordId = bookToId[word];
-            return selectedBookIds.includes(wordId) ? '#00FF00' : '#000000';
-          },
-          hover: function(item: WordCloud.ListEntry, dimension: WordCloud.Dimension, event: MouseEvent) {
-            
-          }
-        });
+      // Update read count
+      if (readCount) {
+        readCount.textContent = selectedBookIds.length.toString();
       }
+
+      // Redraw the word cloud
+      initializeWordCloud();
     }
   });
 }
 
-const downloadButton = document.getElementById('download_button');
-if (downloadButton) {
+// Initialize download button
+if (downloadButton && canvas) {
   downloadButton.addEventListener('click', () => {
-    if (canvas) {
-      const image = canvas.toDataURL('image/png');
-      const link = document.createElement('a');
-      link.href = image;
-      link.download = 'books_everyone_should_read.png';
-      link.click();
-
-      
-    }
+    const image = canvas.toDataURL('image/png');
+    const link = document.createElement('a');
+    link.href = image;
+    link.download = 'books_everyone_should_read.png';
+    link.click();
   });
 }
 
-const readCount = document.getElementById('read_count');
+// Initialize counters
 if (readCount) {
   readCount.textContent = selectedBookIds.length.toString();
 }
 
-const totalCount = document.getElementById('total_count');
 if (totalCount) {
   totalCount.textContent = books.length.toString();
 }
