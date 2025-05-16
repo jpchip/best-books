@@ -106,7 +106,7 @@ if (form) {
     }
     
     label.appendChild(checkbox);
-    label.appendChild(document.createTextNode(book.name));
+    label.appendChild(document.createTextNode(`${book.name} (${book.author})`));
     form.appendChild(label);
     form.appendChild(document.createElement('br'));
   });
