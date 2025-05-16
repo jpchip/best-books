@@ -9,7 +9,7 @@ const shareUrl = document.getElementById('share_url') as HTMLAnchorElement;
 const downloadButton = document.getElementById('download_button') as HTMLButtonElement;
 const readCount = document.getElementById('read_count') as HTMLElement;
 const totalCount = document.getElementById('total_count') as HTMLElement;
-
+const copyUrlButton = document.getElementById('copy_url_button') as HTMLButtonElement;
 // Convert books array to WordCloud.ListEntry format
 const list: WordCloud.ListEntry[] = books.map((book: Book) => [book.name, book.weight]);
 
@@ -163,4 +163,11 @@ if (readCount) {
 
 if (totalCount) {
   totalCount.textContent = books.length.toString();
+}
+
+if (copyUrlButton) {
+  copyUrlButton.addEventListener('click', () => {
+    navigator.clipboard.writeText(window.location.href);
+    window.alert('URL copied to clipboard');
+  });
 }

@@ -9,10 +9,12 @@
   <body>
     <div id="app">
       <h1>Books Everyone Should Read</h1>
+      <p>This is a list of books that everyone should read. It's based on the <a href="https://informationisbeautiful.net/visualizations/novels-everyone-should-read-interactive/">Books Everyone Should Read</a> visualization from <a href="https://informationisbeautiful.net/">Information is Beautiful</a>.</p>
       <canvas id="my_canvas" width="1000" height="1000" style="border: 1px solid black;"></canvas>
 
       <p>Select the books you've read to see them highlighted in the word cloud.</p>
-      <p>Share your results with this url: <a id="share_url" ></a></p>
+      <p>Share your results:</p>
+      <button id="copy_url_button">Copy URL</button>
       <button id="download_button">Download Image</button>
       <p>Read <span id="read_count"></span> of <span id="total_count"></span> books</p>
       <form id="read_books_form">
