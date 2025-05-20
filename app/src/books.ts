@@ -828,3 +828,50 @@ export interface Book {
     },
   ];
   
+
+export function encodeBookIds(ids: string[]): string {
+  // Create a bit array where each bit represents a book (1 if selected, 0 if not)
+  const bits = new Array(books.length).fill(0);
+  ids.forEach(id => {
+    const index = parseInt(id.substring(1)) - 1; // Convert "b1" to 0, "b2" to 1, etc.
+    if (index >= 0 && index < bits.length) {
+      bits[index] = 1;
+    }
+  });
+  
+  // Convert bits to bytes
+  const bytes = [];
+  for (let i = 0; i < bits.length; i += 8) {
+    let byte = 0;
+    for (let j = 0; j < 8 && i + j < bits.length; j++) {
+      byte |= bits[i + j] << (7 - j);
+    }
+    bytes.push(byte);
+  }
+  
+  // Convert to base64
+  return btoa(String.fromCharCode(...bytes));
+}
+
+export function decodeBookIds(encoded: string): string[] {
+  try {
+    // Convert from base64 to bytes
+    const bytes = atob(encoded).split('').map(c => c.charCodeAt(0));
+    
+    // Convert bytes to bits
+    const bits: number[] = [];
+    bytes.forEach(byte => {
+      for (let i = 7; i >= 0; i--) {
+        bits.push((byte >> i) & 1);
+      }
+    });
+    
+    // Convert bits to book IDs
+    return bits
+      .slice(0, books.length)
+      .map((bit, index) => bit ? `b${index + 1}` : null)
+      .filter((id): id is string => id !== null);
+  } catch {
+    return [];
+  }
+}
