@@ -1,8 +1,10 @@
 {
-  "name": "app",
+  "name": "books-everyone-should-read",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
+  "author": "Jared Chapiewsky <jpchapiewsky@gmail.com>",
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
