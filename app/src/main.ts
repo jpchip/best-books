@@ -1,4 +1,3 @@
-
 import { books, decodeBookIds, encodeBookIds } from './books';
 import { createTooltip } from "./tooltip";
 import { initializeWordCloud } from "./wordcloud";
@@ -6,11 +5,13 @@ import { initializeWordCloud } from "./wordcloud";
 // Type definitions for DOM elements
 const canvas = document.getElementById('my_canvas') as HTMLCanvasElement;
 const form = document.getElementById('read_books_form') as HTMLFormElement;
+const readBooksFieldset = document.getElementById('read_books_fieldset') as HTMLFieldSetElement;
 const shareUrl = document.getElementById('share_url') as HTMLAnchorElement;
 const downloadButton = document.getElementById('download_button') as HTMLButtonElement;
 const readCount = document.getElementById('read_count') as HTMLElement;
 const totalCount = document.getElementById('total_count') as HTMLElement;
 const copyUrlButton = document.getElementById('copy_url_button') as HTMLButtonElement;
+const colorPicker = document.querySelector('input[name="color"]') as HTMLInputElement;
 
 // Update the mapping objects to use the new structure
 const bookToId: { [key: string]: string } = {};
@@ -40,7 +41,13 @@ if (canvas) {
   const encodedBooks = urlParams.get('books');
   selectedBookIds = encodedBooks ? decodeBookIds(encodedBooks) : [];
   
-  initializeWordCloud(canvas, books, selectedBookIds, tooltip);
+  // Get initial color from URL or use default
+  const initialColor = urlParams.get('color') || '#00FF00';
+  if (colorPicker) {
+    colorPicker.value = initialColor;
+  }
+  
+  initializeWordCloud(canvas, books, selectedBookIds, tooltip, initialColor);
 
   // Add mouseout event to hide tooltip
   canvas.addEventListener('mouseout', () => {
@@ -65,8 +72,8 @@ if (form) {
     
     label.appendChild(checkbox);
     label.appendChild(document.createTextNode(`${book.name} (by ${book.author})`));
-    form.appendChild(label);
-    form.appendChild(document.createElement('br'));
+    readBooksFieldset.appendChild(label);
+    readBooksFieldset.appendChild(document.createElement('br'));
   });
 
   // Handle checkbox changes
@@ -78,13 +85,14 @@ if (form) {
         .filter(cb => cb.checked)
         .map(cb => bookToId[cb.value]);
       
-      // Update URL with selected books
+      // Update URL with selected books and color
       const url = new URL(window.location.href);
       if (selectedBookIds.length > 0) {
         url.searchParams.set('books', encodeBookIds(selectedBookIds));
       } else {
         url.searchParams.delete('books');
       }
+      url.searchParams.set('color', colorPicker.value);
       window.history.pushState({}, '', url.toString());
 
       if (shareUrl) {
@@ -98,7 +106,7 @@ if (form) {
       }
 
       // Redraw the word cloud
-      initializeWordCloud(canvas, books, selectedBookIds, tooltip);
+      initializeWordCloud(canvas, books, selectedBookIds, tooltip, colorPicker.value);
     }
   });
 }
@@ -131,16 +139,13 @@ if (copyUrlButton) {
   });
 }
 
-// initialize color picker in form above the checkboxes
-const colorPicker = document.createElement('input');  
-colorPicker.type = 'color';
-colorPicker.name = 'color';
-colorPicker.value = '#00FF00';
-form.insertBefore(colorPicker, form.firstChild);
-
-// add event listener to color picker
+// Add event listener to color picker
 colorPicker.addEventListener('change', (event) => {
   const color = (event.target as HTMLInputElement).value;
+  // Update URL with new color
+  const url = new URL(window.location.href);
+  url.searchParams.set('color', color);
+  window.history.pushState({}, '', url.toString());
   initializeWordCloud(canvas, books, selectedBookIds, tooltip, color);
 });
 
