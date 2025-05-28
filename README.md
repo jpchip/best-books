@@ -15,6 +15,7 @@ Anyway, now you too can shame your friends/family/co-workers/enemies from the co
 - TypeScript 
 - Vite
 - [WordCloud2](https://github.com/timdream/wordcloud2.js)
+- [Open Library Covers API](https://openlibrary.org/dev/docs/api/covers)
 
 ## Development
 
