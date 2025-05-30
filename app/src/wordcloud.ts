@@ -28,8 +28,8 @@ export function initializeWordCloud(canvas: HTMLCanvasElement, books: Book[], se
       list: list,
       minRotation: 0,
       maxRotation: 0,
-      gridSize: canvas.parentElement?.clientWidth < 768 ? 5 : 10,
-      weightFactor: canvas.parentElement?.clientWidth < 768 ? 2 : 5,
+      gridSize: parentWidth < 768 ? 5 : 10,
+      weightFactor: parentWidth < 768 ? 2 : 5,
       fontFamily: 'Average, Times, serif',
       shuffle: false,
       color: (word: string) => {
