@@ -1,6 +1,6 @@
 # Best Books
 
-This repo contains a simple web app that displays the [Books Everyone Should Read](https://informationisbeautiful.net/visualizations/novels-everyone-should-read-interactive/)
+This repo contains a simple web app that displays a customizable word cloud of [Books Everyone Should Read](https://informationisbeautiful.net/visualizations/novels-everyone-should-read-interactive/).
 
 ## Story
 
@@ -9,6 +9,8 @@ up on our office wall as a kind of [office art project](https://www.flickr.com/p
 kinda bad about it.
 
 Anyway, now you too can shame your friends/family/co-workers/enemies from the comfort of a website!
+
+My current list: https://books-everyone-should-read.netlify.app/?books=%2FRS2NYSWhAMigxQAeAIY&color=%234625e9
 
 ## Built With
 
