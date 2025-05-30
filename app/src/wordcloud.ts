@@ -7,6 +7,11 @@ import type { Book } from "./books";
 export function initializeWordCloud(canvas: HTMLCanvasElement, books: Book[], selectedBookIds: string[], tooltip: HTMLDivElement, color: string = '#00FF00') {
     if (!canvas) return;
 
+    // Set canvas dimensions based on parent container
+    const parentWidth = canvas.parentElement?.clientWidth || 1000;
+    canvas.width = parentWidth;
+    canvas.height = parentWidth; // Keep it square
+
     const list: WordCloud.ListEntry[] = books.map((book: Book) => [book.name, book.weight]);
     
     const bookToId: { [key: string]: string } = {};
@@ -23,7 +28,8 @@ export function initializeWordCloud(canvas: HTMLCanvasElement, books: Book[], se
       list: list,
       minRotation: 0,
       maxRotation: 0,
-      weightFactor: 3,
+      gridSize: canvas.parentElement?.clientWidth < 768 ? 5 : 10,
+      weightFactor: canvas.parentElement?.clientWidth < 768 ? 2 : 5,
       fontFamily: 'Average, Times, serif',
       shuffle: false,
       color: (word: string) => {

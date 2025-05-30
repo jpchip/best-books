@@ -58,13 +58,15 @@ if (canvas) {
 // Initialize form if it exists
 if (form) {
   // Create checkboxes for each book
+  books.sort((a, b) => a.name.localeCompare(b.name));
   books.forEach(book => {
     const label = document.createElement('label');
+    label.classList.add('form-check');
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.value = book.name;
     checkbox.name = 'book';
-    
+    checkbox.classList.add('form-check-input');
     // Check if this book is in the URL parameters
     if (selectedBookIds.includes(book.id)) {
       checkbox.checked = true;
@@ -73,7 +75,6 @@ if (form) {
     label.appendChild(checkbox);
     label.appendChild(document.createTextNode(`${book.name} (by ${book.author})`));
     readBooksFieldset.appendChild(label);
-    readBooksFieldset.appendChild(document.createElement('br'));
   });
 
   // Handle checkbox changes
@@ -147,5 +148,12 @@ colorPicker.addEventListener('change', (event) => {
   url.searchParams.set('color', color);
   window.history.pushState({}, '', url.toString());
   initializeWordCloud(canvas, books, selectedBookIds, tooltip, color);
+});
+
+// Add window resize handler
+window.addEventListener('resize', () => {
+  if (canvas) {
+    initializeWordCloud(canvas, books, selectedBookIds, tooltip, colorPicker.value);
+  }
 });
 
