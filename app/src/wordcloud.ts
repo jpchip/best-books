@@ -9,8 +9,9 @@ export function initializeWordCloud(canvas: HTMLCanvasElement, books: Book[], se
 
     // Set canvas dimensions based on parent container
     const parentWidth = canvas.parentElement?.clientWidth || 1000;
-    canvas.width = parentWidth;
-    canvas.height = parentWidth; // Keep it square
+    const padding = 15; // 10px padding on each side
+    canvas.width = parentWidth - (padding * 2);
+    canvas.height = parentWidth - (padding * 2); // Keep it square
 
     const list: WordCloud.ListEntry[] = books.map((book: Book) => [book.name, book.weight]);
     
