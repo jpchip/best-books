@@ -227,7 +227,7 @@ export interface Book {
     {
       name: 'A Clockwork Orange',
       weight: 5,
-      isbn: '9780393357526',
+      isbn: '9780393341768',
       id: 'b32',
       author: 'Anthony Burgess'
     },
@@ -346,7 +346,7 @@ export interface Book {
     {
       name: 'A Prayer for Owen Meany',
       weight: 4,
-      isbn: '9780345361790',
+      isbn: '9780062204097',
       id: 'b49',
       author: 'John Irving'
     },
@@ -577,7 +577,7 @@ export interface Book {
     {
       name: 'Crash',
       weight: 3,
-      isbn: '9780374527879',
+      isbn: '9781250171511',
       id: 'b82',
       author: 'J.G. Ballard'
     },
@@ -766,14 +766,14 @@ export interface Book {
     {
       name: 'The Remains of the Day',
       weight: 3,
-      isbn: '9780571283876',
+      isbn: '9780679731726',
       id: 'b109',
       author: 'Kazuo Ishiguro'
     },
     {
       name: 'The Tin Drum',
       weight: 3,
-      isbn: '9780679725756',
+      isbn: '9780547339108',
       id: 'b110',
       author: 'Günter Grass'
     },

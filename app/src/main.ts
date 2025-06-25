@@ -71,9 +71,15 @@ if (form) {
     if (selectedBookIds.includes(book.id)) {
       checkbox.checked = true;
     }
+    const link = document.createElement('a');
+    link.href = `https://booksco.com/book/${book.isbn}`;
+    link.innerHTML = '<i class="bi bi-box-arrow-up-right"></i>';
+    link.target = '_blank';
+    link.title = 'Buy on Books and Company';
     
     label.appendChild(checkbox);
-    label.appendChild(document.createTextNode(`${book.name} (by ${book.author})`));
+    label.appendChild(document.createTextNode(`${book.name} (by ${book.author}) `));
+    label.appendChild(link);
     readBooksFieldset.appendChild(label);
   });
 
