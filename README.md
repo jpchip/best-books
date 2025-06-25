@@ -18,6 +18,7 @@ My current list: https://books-everyone-should-read.netlify.app/?books=%2FRS2NYS
 - Vite
 - [WordCloud2](https://github.com/timdream/wordcloud2.js)
 - [Open Library Covers API](https://openlibrary.org/dev/docs/api/covers)
+- [Books and Company](https://booksco.com/) (Support your local bookstore!)
 
 ## Development
 
