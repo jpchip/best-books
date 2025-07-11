@@ -10,7 +10,7 @@ kinda bad about it.
 
 Anyway, now you too can shame your friends/family/co-workers/enemies from the comfort of a website!
 
-My current list: https://books-everyone-should-read.netlify.app/?books=%2FRS2NYSWhAMigxQAeAIY&color=%234625e9
+[My current list](https://books-everyone-should-read.netlify.app/?books=%2FRS2NYSWhAMygxQAeAIY&color=%234625e9)
 
 ## Built With
 
