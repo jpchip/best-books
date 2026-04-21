@@ -6,6 +6,7 @@ import { initializeWordCloud } from "./wordcloud";
 const canvas = document.getElementById('my_canvas') as HTMLCanvasElement;
 const form = document.getElementById('read_books_form') as HTMLFormElement;
 const readBooksFieldset = document.getElementById('read_books_fieldset') as HTMLFieldSetElement;
+const readBooksList = document.getElementById('read_books_list');
 const shareUrl = document.getElementById('share_url') as HTMLAnchorElement;
 const downloadButton = document.getElementById('download_button') as HTMLButtonElement;
 const readCount = document.getElementById('read_count') as HTMLElement;
@@ -59,37 +60,49 @@ if (canvas) {
 if (form) {
   // Alphabetical order for the form only — do not mutate `books` (word cloud relies on stable ordering).
   const booksForForm = [...books].sort((a, b) => a.name.localeCompare(b.name));
+  const listMount = readBooksList ?? readBooksFieldset;
   booksForForm.forEach(book => {
     const label = document.createElement('label');
-    label.classList.add('form-check');
+    label.className = 'book-list-item form-check';
+
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.value = book.name;
     checkbox.name = 'book';
     checkbox.classList.add('form-check-input');
-    // Check if this book is in the URL parameters
     if (selectedBookIds.includes(book.id)) {
       checkbox.checked = true;
     }
+
+    const textBlock = document.createElement('div');
+    textBlock.className = 'book-list-text';
+
+    const titleEl = document.createElement('div');
+    titleEl.className = 'book-list-title fw-medium';
+    titleEl.textContent = book.name;
+
+    const authorEl = document.createElement('div');
+    authorEl.className = 'book-list-author text-body-secondary fst-italic small';
+    authorEl.textContent = `by ${book.author}`;
+
+    textBlock.appendChild(titleEl);
+    textBlock.appendChild(authorEl);
+
     const link = document.createElement('a');
     link.href = `https://booksco.com/book/${book.isbn}`;
-    link.innerHTML = '<i class="bi bi-box-arrow-up-right"></i>';
+    link.className = 'book-list-external btn btn-sm btn-outline-secondary';
+    link.innerHTML = '<i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>';
     link.target = '_blank';
+    link.rel = 'noopener noreferrer';
     link.title = 'Buy on Books and Company';
-    
-    const titleSpan = document.createElement('span');
-    titleSpan.className = 'ms-1 fw-medium';
-    titleSpan.textContent = book.name;
-
-    const authorSpan = document.createElement('span');
-    authorSpan.className = 'text-body-secondary fst-italic';
-    authorSpan.textContent = ` by ${book.author} `;
+    link.addEventListener('click', (e) => e.stopPropagation());
+    link.setAttribute('aria-label', `Buy “${book.name}” on Books and Company`);
 
     label.appendChild(checkbox);
-    label.appendChild(titleSpan);
-    label.appendChild(authorSpan);
+    label.appendChild(textBlock);
     label.appendChild(link);
-    readBooksFieldset.appendChild(label);
+
+    listMount.appendChild(label);
   });
 
   // Handle checkbox changes

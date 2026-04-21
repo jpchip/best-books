@@ -18,6 +18,89 @@
         margin-top: 2rem;
         margin-bottom: 2rem;
       }
+      .book-fieldset {
+        border: 0;
+        padding: 0;
+        margin: 0;
+        min-width: 0;
+      }
+      .book-fieldset > legend {
+        float: none;
+        width: 100%;
+        padding: 0;
+        margin-bottom: 0.75rem;
+      }
+      .book-list {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.65rem;
+        align-items: stretch;
+      }
+      @media (min-width: 576px) {
+        .book-list {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 0.65rem 0.85rem;
+        }
+      }
+      @media (min-width: 1200px) {
+        .book-list {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+      /* Undo Bootstrap’s float/negative margin on the input; keep explicit left padding here (more specific than .book-list-item alone) */
+      .book-list-item.form-check {
+        padding-left: 1.35rem;
+        min-height: 0;
+        display: flex;
+        align-items: flex-start;
+      }
+      .book-list-item {
+        gap: 0.875rem;
+        margin: 0;
+        padding: 0.9rem 1rem 0.95rem;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        border-radius: 0.5rem;
+        background: #fff;
+        cursor: pointer;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+      }
+      .book-list-item:hover {
+        border-color: rgba(0, 0, 0, 0.14);
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+      }
+      .book-list-item:has(.form-check-input:checked) {
+        border-color: rgba(29, 78, 216, 0.35);
+        background: rgba(29, 78, 216, 0.06);
+      }
+      .book-list-item .form-check-input {
+        float: none;
+        margin-left: 0;
+        margin-top: 0.35rem;
+        position: relative;
+        flex-shrink: 0;
+        cursor: pointer;
+      }
+      .book-list-text {
+        flex: 1 1 auto;
+        min-width: 0;
+        text-align: left;
+      }
+      .book-list-title {
+        line-height: 1.4;
+        word-wrap: break-word;
+      }
+      .book-list-author {
+        margin-top: 0.35rem;
+        line-height: 1.35;
+      }
+      .book-list-item .book-list-external {
+        flex-shrink: 0;
+        align-self: flex-start;
+        margin-top: 0.15rem;
+        padding: 0.35rem 0.55rem;
+        line-height: 1;
+        border-radius: 0.3rem;
+      }
     </style>
   </head>
   <body>
@@ -50,14 +133,15 @@
               <label for="color" class="form-label">Select a color:</label><br>
               <input id="color" type="color" name="color" value="#1d4ed8" class="form-control form-control-color" >
             </div>
-        <fieldset id="read_books_fieldset">
-          <legend>Books</legend>
-        </fieldset>
-        
-        <button type="button" class="btn btn-secondary mt-3" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-          <i class="bi bi-arrow-up"></i> Return to Top
-        </button>
-      </form>
+            <fieldset id="read_books_fieldset" class="book-fieldset">
+              <legend class="fs-6 fw-semibold text-body-secondary border-bottom pb-2 mb-0">Books</legend>
+              <div id="read_books_list" class="book-list mt-3"></div>
+            </fieldset>
+
+            <button type="button" class="btn btn-secondary mt-4" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+              <i class="bi bi-arrow-up"></i> Return to Top
+            </button>
+          </form>
       </div>
     </div>
     <script type="module" src="/src/main.ts"></script>
