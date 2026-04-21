@@ -57,9 +57,9 @@ if (canvas) {
 
 // Initialize form if it exists
 if (form) {
-  // Create checkboxes for each book
-  books.sort((a, b) => a.name.localeCompare(b.name));
-  books.forEach(book => {
+  // Alphabetical order for the form only — do not mutate `books` (word cloud relies on stable ordering).
+  const booksForForm = [...books].sort((a, b) => a.name.localeCompare(b.name));
+  booksForForm.forEach(book => {
     const label = document.createElement('label');
     label.classList.add('form-check');
     const checkbox = document.createElement('input');

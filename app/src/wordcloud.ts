@@ -13,7 +13,10 @@ export function initializeWordCloud(canvas: HTMLCanvasElement, books: Book[], se
     canvas.width = parentWidth - (padding * 2);
     canvas.height = parentWidth - (padding * 2); // Keep it square
 
-    const list: WordCloud.ListEntry[] = books.map((book: Book) => [book.name, book.weight]);
+    // Deterministic order: largest first (required for packing), then title for stable ties.
+    const list: WordCloud.ListEntry[] = [...books]
+      .sort((a, b) => b.weight - a.weight || a.name.localeCompare(b.name))
+      .map((book: Book) => [book.name, book.weight]);
     
     const bookToId: { [key: string]: string } = {};
     const bookToIsbn: { [key: string]: string } = {};
@@ -33,6 +36,7 @@ export function initializeWordCloud(canvas: HTMLCanvasElement, books: Book[], se
       weightFactor: parentWidth < 768 ? 2 : 5,
       fontFamily: 'Average, Times, serif',
       shuffle: false,
+      rotateRatio: 0,
       color: (word: string) => {
         const wordId = bookToId[word];
         return selectedBookIds.includes(wordId) ? color : '#000000';
