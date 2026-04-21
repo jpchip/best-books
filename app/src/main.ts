@@ -7,7 +7,6 @@ const canvas = document.getElementById('my_canvas') as HTMLCanvasElement;
 const form = document.getElementById('read_books_form') as HTMLFormElement;
 const readBooksFieldset = document.getElementById('read_books_fieldset') as HTMLFieldSetElement;
 const readBooksList = document.getElementById('read_books_list');
-const shareUrl = document.getElementById('share_url') as HTMLAnchorElement;
 const downloadButton = document.getElementById('download_button') as HTMLButtonElement;
 const readCount = document.getElementById('read_count') as HTMLElement;
 const totalCount = document.getElementById('total_count') as HTMLElement;
@@ -124,11 +123,6 @@ if (form) {
       url.searchParams.set('color', colorPicker.value);
       window.history.pushState({}, '', url.toString());
 
-      if (shareUrl) {
-        shareUrl.textContent = url.toString();
-        shareUrl.href = url.toString();
-      }
-
       // Update read count
       if (readCount) {
         readCount.textContent = selectedBookIds.length.toString();
@@ -162,9 +156,17 @@ if (totalCount) {
 
 // Initialize copy URL button
 if (copyUrlButton) {
-  copyUrlButton.addEventListener('click', () => {
-    navigator.clipboard.writeText(window.location.href);
-    window.alert('URL copied to clipboard');
+  copyUrlButton.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      const toastEl = document.getElementById('copy_url_toast');
+      const ToastCtor = (window as Window & { bootstrap?: { Toast: new (el: Element) => { show: () => void } } }).bootstrap?.Toast;
+      if (toastEl && ToastCtor) {
+        new ToastCtor(toastEl).show();
+      }
+    } catch {
+      window.alert('Could not copy the link. You can copy it from the address bar instead.');
+    }
   });
 }
 
