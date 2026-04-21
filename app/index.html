@@ -28,8 +28,8 @@
         Books Everyone Should Read
       </h3>
       <p>This is a list of books that everyone should read. It's based on the <a href="https://informationisbeautiful.net/visualizations/novels-everyone-should-read-interactive/">Books Everyone Should Read</a> visualization from <a href="https://informationisbeautiful.net/">Information is Beautiful</a>.</p>
-      <canvas id="my_canvas" width="1000" height="1000" style="border: 1px solid black;"></canvas>
-      <p>Read <span id="read_count"></span> of <span id="total_count"></span> books</p>
+      <canvas id="my_canvas" width="1000" height="1000" style="border: 1px solid black;" aria-label="Word cloud of book titles. Read count is shown in the bottom-left corner of the canvas."></canvas>
+      <p class="visually-hidden" aria-live="polite">Read <span id="read_count"></span> of <span id="total_count"></span> books</p>
 
       <div class="card mb-3">
         <div class="card-header">
@@ -48,7 +48,7 @@
           <form id="read_books_form">
             <div class="mb-3">
               <label for="color" class="form-label">Select a color:</label><br>
-              <input id="color" type="color" name="color" value="#00FF00" class="form-control form-control-color" >
+              <input id="color" type="color" name="color" value="#1d4ed8" class="form-control form-control-color" >
             </div>
         <fieldset id="read_books_fieldset">
           <legend>Books</legend>

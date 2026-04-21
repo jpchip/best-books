@@ -1,10 +1,44 @@
 import WordCloud from "wordcloud";
 import type { Book } from "./books";
 
+let lastWordCloudStopHandler: (() => void) | null = null;
 
+function drawReadSummaryOnCanvas(canvas: HTMLCanvasElement, read: number, total: number) {
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  const padding = Math.max(10, Math.round(canvas.width * 0.02));
+  const fontSize = Math.max(14, Math.round(canvas.width * 0.028));
+  const text = `Read ${read} of ${total} books`;
+
+  ctx.save();
+  ctx.font = `${fontSize}px system-ui, -apple-system, "Segoe UI", sans-serif`;
+  ctx.textBaseline = "bottom";
+  ctx.textAlign = "left";
+
+  const x = padding;
+  const y = canvas.height - padding;
+
+  ctx.lineJoin = "round";
+  ctx.lineWidth = Math.max(3, fontSize * 0.2);
+  ctx.strokeStyle = "rgba(255, 255, 255, 0.9)";
+  ctx.strokeText(text, x, y);
+
+  ctx.fillStyle = "#212529";
+  ctx.fillText(text, x, y);
+  ctx.restore();
+}
 
 // Function to initialize WordCloud
-export function initializeWordCloud(canvas: HTMLCanvasElement, books: Book[], selectedBookIds: string[], tooltip: HTMLDivElement, color: string = '#00FF00') {
+export function initializeWordCloud(
+  canvas: HTMLCanvasElement,
+  books: Book[],
+  selectedBookIds: string[],
+  tooltip: HTMLDivElement,
+  color: string = "#1d4ed8",
+  readCount: number,
+  totalCount: number
+) {
     if (!canvas) return;
 
     // Set canvas dimensions based on parent container
@@ -27,6 +61,14 @@ export function initializeWordCloud(canvas: HTMLCanvasElement, books: Book[], se
         bookToIsbn[book.name] = book.isbn;
         bookToAuthor[book.name] = book.author;
       });
+
+    if (lastWordCloudStopHandler) {
+      canvas.removeEventListener("wordcloudstop", lastWordCloudStopHandler);
+    }
+    lastWordCloudStopHandler = () => {
+      drawReadSummaryOnCanvas(canvas, readCount, totalCount);
+    };
+    canvas.addEventListener("wordcloudstop", lastWordCloudStopHandler);
   
     WordCloud(canvas, {
       list: list,

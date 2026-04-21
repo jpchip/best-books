@@ -42,12 +42,12 @@ if (canvas) {
   selectedBookIds = encodedBooks ? decodeBookIds(encodedBooks) : [];
   
   // Get initial color from URL or use default
-  const initialColor = urlParams.get('color') || '#00FF00';
+  const initialColor = urlParams.get('color') || '#1d4ed8';
   if (colorPicker) {
     colorPicker.value = initialColor;
   }
   
-  initializeWordCloud(canvas, books, selectedBookIds, tooltip, initialColor);
+  initializeWordCloud(canvas, books, selectedBookIds, tooltip, initialColor, selectedBookIds.length, books.length);
 
   // Add mouseout event to hide tooltip
   canvas.addEventListener('mouseout', () => {
@@ -77,8 +77,17 @@ if (form) {
     link.target = '_blank';
     link.title = 'Buy on Books and Company';
     
+    const titleSpan = document.createElement('span');
+    titleSpan.className = 'ms-1 fw-medium';
+    titleSpan.textContent = book.name;
+
+    const authorSpan = document.createElement('span');
+    authorSpan.className = 'text-body-secondary fst-italic';
+    authorSpan.textContent = ` by ${book.author} `;
+
     label.appendChild(checkbox);
-    label.appendChild(document.createTextNode(`${book.name} (by ${book.author}) `));
+    label.appendChild(titleSpan);
+    label.appendChild(authorSpan);
     label.appendChild(link);
     readBooksFieldset.appendChild(label);
   });
@@ -113,7 +122,7 @@ if (form) {
       }
 
       // Redraw the word cloud
-      initializeWordCloud(canvas, books, selectedBookIds, tooltip, colorPicker.value);
+      initializeWordCloud(canvas, books, selectedBookIds, tooltip, colorPicker.value, selectedBookIds.length, books.length);
     }
   });
 }
@@ -153,13 +162,13 @@ colorPicker.addEventListener('change', (event) => {
   const url = new URL(window.location.href);
   url.searchParams.set('color', color);
   window.history.pushState({}, '', url.toString());
-  initializeWordCloud(canvas, books, selectedBookIds, tooltip, color);
+  initializeWordCloud(canvas, books, selectedBookIds, tooltip, color, selectedBookIds.length, books.length);
 });
 
 // Add window resize handler
 window.addEventListener('resize', () => {
   if (canvas) {
-    initializeWordCloud(canvas, books, selectedBookIds, tooltip, colorPicker.value);
+    initializeWordCloud(canvas, books, selectedBookIds, tooltip, colorPicker.value, selectedBookIds.length, books.length);
   }
 });
 
